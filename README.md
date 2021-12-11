@@ -5,14 +5,12 @@ ImagePicker for SwiftUI
 
 set
 ```.swift
-   @State var selectedImage: UIImage?
-   @State var showPicker: Bool = false
+import ImagePickerSwiftUI
 ```
 
-Add Info.plist 
-```
-    <key>NSCameraUsageDescription</key>
-    <string>I'll use it to take pictures.</string>
+```.swift
+   @State var selectedImage: UIImage?
+   @State var showPicker: Bool = false
 ```
 
 action
@@ -32,6 +30,12 @@ show
       sourceType: .camera // or .photoLibrary
     )
   }
+```
+
+Add Info.plist 
+```
+    <key>NSCameraUsageDescription</key>
+    <string>I'll use it to take pictures.</string>
 ```
 
 that's all
