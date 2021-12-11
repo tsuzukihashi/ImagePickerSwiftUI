@@ -1,11 +1,24 @@
 import XCTest
+
 @testable import ImagePickerSwiftUI
 
+@available(iOS 13.0, *)
+@available(tvOS 13.0, *)
+@available(watchOS 6.0, *)
+@available(OSX 10.15, *)
 final class ImagePickerSwiftUITests: XCTestCase {
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(ImagePickerSwiftUI().text, "Hello, World!")
+    var subject: ImagePickerSwiftUI!
+    var selectedImage: UIImage!
+
+    override func setUp() {
+        selectedImage = UIImage(systemName: "star")
+        subject = .init(
+            selectedImage: .constant(selectedImage),
+            sourceType: .photoLibrary
+        )
+    }
+
+    func test_init() {
+        XCTAssertEqual(subject.sourceType, .photoLibrary)
     }
 }
