@@ -6,10 +6,10 @@ import SwiftUI
 @available(OSX 10.15, *)
 public struct ImagePickerSwiftUI: UIViewControllerRepresentable {
     @Environment(\.presentationMode) private var presentationMode
-    @Binding var selectedImage: UIImage
+    @Binding var selectedImage: UIImage?
     var sourceType: UIImagePickerController.SourceType = .photoLibrary
 
-    public init(selectedImage: Binding<UIImage>, sourceType: UIImagePickerController.SourceType) {
+    public init(selectedImage: Binding<UIImage?>, sourceType: UIImagePickerController.SourceType) {
         self._selectedImage = selectedImage
         self.sourceType = sourceType
     }
