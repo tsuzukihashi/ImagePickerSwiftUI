@@ -7,16 +7,22 @@ import SwiftUI
 public struct ImagePickerSwiftUI: UIViewControllerRepresentable {
     @Environment(\.presentationMode) private var presentationMode
     @Binding var selectedImage: UIImage?
-    var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    var sourceType: UIImagePickerController.SourceType
+    var allowsEditing: Bool
 
-    public init(selectedImage: Binding<UIImage?>, sourceType: UIImagePickerController.SourceType) {
+    public init(
+        selectedImage: Binding<UIImage?>,
+        sourceType: UIImagePickerController.SourceType,
+        allowsEditing: Bool
+    ) {
         self._selectedImage = selectedImage
         self.sourceType = sourceType
+        self.allowsEditing = allowsEditing
     }
 
     public func makeUIViewController(context: Context) -> UIImagePickerController {
         let imagePicker = UIImagePickerController()
-        imagePicker.allowsEditing = false
+        imagePicker.allowsEditing = allowsEditing
         imagePicker.sourceType = sourceType
         imagePicker.delegate = context.coordinator
 

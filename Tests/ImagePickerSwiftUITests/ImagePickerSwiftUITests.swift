@@ -14,7 +14,8 @@ final class ImagePickerSwiftUITests: XCTestCase {
         selectedImage = UIImage(systemName: "star")
         subject = .init(
             selectedImage: .constant(selectedImage),
-            sourceType: .photoLibrary
+            sourceType: .photoLibrary,
+            allowsEditing: false
         )
     }
 
