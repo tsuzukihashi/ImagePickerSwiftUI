@@ -9,15 +9,18 @@ public struct ImagePickerSwiftUI: UIViewControllerRepresentable {
     @Binding var selectedImage: UIImage?
     var sourceType: UIImagePickerController.SourceType
     var allowsEditing: Bool
+    var key: UIImagePickerController.InfoKey
 
     public init(
         selectedImage: Binding<UIImage?>,
         sourceType: UIImagePickerController.SourceType,
-        allowsEditing: Bool
+        allowsEditing: Bool,
+        key: UIImagePickerController.InfoKey = .originalImage
     ) {
         self._selectedImage = selectedImage
         self.sourceType = sourceType
         self.allowsEditing = allowsEditing
+        self.key = key
     }
 
     public func makeUIViewController(context: Context) -> UIImagePickerController {
