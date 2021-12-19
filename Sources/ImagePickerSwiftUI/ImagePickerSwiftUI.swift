@@ -54,7 +54,7 @@ public struct ImagePickerSwiftUI: UIViewControllerRepresentable {
             
             if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
 
-                parent.selectedImage = parent.croppingToSquare ? image : image.croppingToSquare()
+                parent.selectedImage = parent.croppingToSquare ? image.croppingToSquare() : image
             }
             
             parent.presentationMode.wrappedValue.dismiss()
