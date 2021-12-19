@@ -10,17 +10,20 @@ public struct ImagePickerSwiftUI: UIViewControllerRepresentable {
     var sourceType: UIImagePickerController.SourceType
     var allowsEditing: Bool
     var key: UIImagePickerController.InfoKey
+    var croppingToSquare: Bool = false
 
     public init(
         selectedImage: Binding<UIImage?>,
         sourceType: UIImagePickerController.SourceType,
         allowsEditing: Bool,
-        key: UIImagePickerController.InfoKey = .originalImage
+        key: UIImagePickerController.InfoKey = .originalImage,
+        croppingToSquare: Bool = false
     ) {
         self._selectedImage = selectedImage
         self.sourceType = sourceType
         self.allowsEditing = allowsEditing
         self.key = key
+        self.croppingToSquare = croppingToSquare
     }
 
     public func makeUIViewController(context: Context) -> UIImagePickerController {
@@ -50,7 +53,8 @@ public struct ImagePickerSwiftUI: UIViewControllerRepresentable {
         public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             
             if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-                parent.selectedImage = image
+
+                parent.selectedImage = parent.croppingToSquare ? image : image.croppingToSquare()
             }
             
             parent.presentationMode.wrappedValue.dismiss()
