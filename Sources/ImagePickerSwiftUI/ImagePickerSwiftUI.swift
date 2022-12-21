@@ -1,9 +1,6 @@
 import SwiftUI
 
 @available(iOS 13.0, *)
-@available(tvOS 13.0, *)
-@available(watchOS 6.0, *)
-@available(OSX 10.15, *)
 public struct ImagePickerSwiftUI: UIViewControllerRepresentable {
     @Environment(\.presentationMode) private var presentationMode
     @Binding var selectedImage: UIImage?
@@ -51,10 +48,15 @@ public struct ImagePickerSwiftUI: UIViewControllerRepresentable {
         }
         
         public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            
-            if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
 
-                parent.selectedImage = parent.croppingToSquare ? image.croppingToSquare() : image
+            if parent.allowsEditing {
+                if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+                    parent.selectedImage = image
+                }
+            } else {
+                if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+                    parent.selectedImage = parent.croppingToSquare ? image.croppingToSquare() : image
+                }
             }
             
             parent.presentationMode.wrappedValue.dismiss()
