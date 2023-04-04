@@ -27,7 +27,8 @@ show
   .sheet(isPresented: $showPicker) {
     ImagePickerSwiftUI(
       selectedImage: $selectedImage,
-      sourceType: .camera // or .photoLibrary
+      sourceType: .camera, // or .photoLibrary
+      allowsEditing: true
     )
   }
 ```
