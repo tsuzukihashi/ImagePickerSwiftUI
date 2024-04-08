@@ -9,7 +9,7 @@ import XCTest
 final class ImagePickerSwiftUITests: XCTestCase {
   var subject: ImagePickerSwiftUI!
   var selectedImage: UIImage!
-  
+
   override func setUp() {
     selectedImage = UIImage(systemName: "star")
     subject = .init(
@@ -18,7 +18,7 @@ final class ImagePickerSwiftUITests: XCTestCase {
       allowsEditing: false
     )
   }
-  
+
   func test_init() {
     XCTAssertEqual(subject.sourceType, .photoLibrary)
   }
