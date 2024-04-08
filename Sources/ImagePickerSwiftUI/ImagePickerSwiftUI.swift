@@ -4,6 +4,7 @@ import SwiftUI
 public struct ImagePickerSwiftUI: UIViewControllerRepresentable {
   @Environment(\.presentationMode) private var presentationMode
   @Binding var selectedImage: UIImage?
+
   var sourceType: UIImagePickerController.SourceType
   var allowsEditing: Bool
   var key: UIImagePickerController.InfoKey
@@ -35,7 +36,7 @@ public struct ImagePickerSwiftUI: UIViewControllerRepresentable {
   public func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {
 
   }
-  
+
   public func makeCoordinator() -> Coordinator {
     Coordinator(self)
   }
