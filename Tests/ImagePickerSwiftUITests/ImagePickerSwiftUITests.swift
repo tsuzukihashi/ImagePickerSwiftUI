@@ -7,19 +7,19 @@ import XCTest
 @available(watchOS 6.0, *)
 @available(OSX 10.15, *)
 final class ImagePickerSwiftUITests: XCTestCase {
-    var subject: ImagePickerSwiftUI!
-    var selectedImage: UIImage!
-
-    override func setUp() {
-        selectedImage = UIImage(systemName: "star")
-        subject = .init(
-            selectedImage: .constant(selectedImage),
-            sourceType: .photoLibrary,
-            allowsEditing: false
-        )
-    }
-
-    func test_init() {
-        XCTAssertEqual(subject.sourceType, .photoLibrary)
-    }
+  var subject: ImagePickerSwiftUI!
+  var selectedImage: UIImage!
+  
+  override func setUp() {
+    selectedImage = UIImage(systemName: "star")
+    subject = .init(
+      selectedImage: .constant(selectedImage),
+      sourceType: .photoLibrary,
+      allowsEditing: false
+    )
+  }
+  
+  func test_init() {
+    XCTAssertEqual(subject.sourceType, .photoLibrary)
+  }
 }
