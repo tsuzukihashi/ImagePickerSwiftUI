@@ -83,6 +83,8 @@ public struct PHPicker: UIViewControllerRepresentable {
             continuation.resume(returning: fileURL)
           }
         }
+
+        continuation.resume(throwing: ImagePickerError.missingImage)
       }
     }
 
