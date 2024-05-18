@@ -54,10 +54,12 @@ public struct PHPicker: UIViewControllerRepresentable {
         for result in results {
           do {
             let image = try await loadImage(result: result)
-            let videoURL = try await loadVideo(result: result)
+            if let videoURL = try await loadVideo(result: result) {
+              parent.videoURLs.append(videoURL)
+            }
 
             parent.images.append(image)
-            parent.videoURLs.append(videoURL)
+
           } catch {
             print(error.localizedDescription)
           }
@@ -66,7 +68,7 @@ public struct PHPicker: UIViewControllerRepresentable {
       }
     }
 
-    private func loadVideo(result: PHPickerResult) async throws -> URL {
+    private func loadVideo(result: PHPickerResult) async throws -> URL? {
       try await withCheckedThrowingContinuation { continuation in
         let provider = result.itemProvider
 
@@ -84,7 +86,7 @@ public struct PHPicker: UIViewControllerRepresentable {
           }
         }
 
-        continuation.resume(throwing: ImagePickerError.missingImage)
+        continuation.resume(returning: nil)
       }
     }
 
