@@ -59,13 +59,12 @@ public struct PHPicker: UIViewControllerRepresentable {
             if let videoURL = try await loadVideo(result: result) {
               parent.videoURLs.append(videoURL)
             }
-            if results.last == result {
-              parent.isPresented = false
-            }
           } catch {
             print(error.localizedDescription)
           }
         }
+
+        parent.isPresented = false
       }
     }
 
