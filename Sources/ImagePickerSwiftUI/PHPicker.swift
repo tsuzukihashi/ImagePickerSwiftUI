@@ -53,18 +53,19 @@ public struct PHPicker: UIViewControllerRepresentable {
       Task {
         for result in results {
           do {
-            let image = try await loadImage(result: result)
+            if let image = try await loadImage(result: result) {
+              parent.images.append(image)
+            }
             if let videoURL = try await loadVideo(result: result) {
               parent.videoURLs.append(videoURL)
             }
-
-            parent.images.append(image)
-
+            if results.last == result {
+              parent.isPresented = false
+            }
           } catch {
             print(error.localizedDescription)
           }
         }
-        parent.isPresented = false
       }
     }
 
@@ -72,34 +73,45 @@ public struct PHPicker: UIViewControllerRepresentable {
       try await withCheckedThrowingContinuation { continuation in
         let provider = result.itemProvider
 
-        if provider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
-          provider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { fileURL, error in
-            if let error {
-              continuation.resume(throwing: error)
-              return
-            }
-            guard let fileURL else {
-              continuation.resume(throwing: ImagePickerError.missingImage)
-              return
-            }
-            continuation.resume(returning: fileURL)
-          }
+        guard provider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) else {
+          continuation.resume(returning: nil)
+          return
         }
 
-        continuation.resume(returning: nil)
+        provider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { fileURL, error in
+          if let error {
+            continuation.resume(throwing: error)
+            return
+          }
+          guard let fileURL else {
+            continuation.resume(returning: nil)
+            return
+          }
+
+          let fileName = "\(Int(Date().timeIntervalSince1970)).\(fileURL.pathExtension)"
+          let tmpUrl = URL(fileURLWithPath: NSTemporaryDirectory() + fileName)
+          try? FileManager.default.copyItem(at: fileURL, to: tmpUrl)
+          continuation.resume(returning: tmpUrl)
+        }
       }
     }
 
-    private func loadImage(result: PHPickerResult) async throws -> UIImage {
+    private func loadImage(result: PHPickerResult) async throws -> UIImage? {
       try await withCheckedThrowingContinuation { continuation in
         let provider = result.itemProvider
+
+        guard provider.hasItemConformingToTypeIdentifier(UTType.image.identifier) else  {
+          continuation.resume(returning: nil)
+          return
+        }
+
         provider.loadObject(ofClass: UIImage.self) { image, error in
           if let error {
             continuation.resume(throwing: error)
             return
           }
           guard let image = image as? UIImage else {
-            continuation.resume(throwing: ImagePickerError.missingImage)
+            continuation.resume(returning: nil)
             return
           }
           continuation.resume(returning: image)
