@@ -51,6 +51,11 @@ public struct PHPicker: UIViewControllerRepresentable {
 
     public func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
       Task {
+        if results.isEmpty {
+          parent.isPresented = false
+          return
+        }
+
         for result in results {
           do {
             if let image = try await loadImage(result: result) {
@@ -59,12 +64,14 @@ public struct PHPicker: UIViewControllerRepresentable {
             if let videoURL = try await loadVideo(result: result) {
               parent.videoURLs.append(videoURL)
             }
+
+            if results.last == result {
+              parent.isPresented = false
+            }
           } catch {
             print(error.localizedDescription)
           }
         }
-
-        parent.isPresented = false
       }
     }
 
