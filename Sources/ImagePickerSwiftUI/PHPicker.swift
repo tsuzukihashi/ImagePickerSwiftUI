@@ -5,6 +5,7 @@ import PhotosUI
 public struct PHPicker: UIViewControllerRepresentable {
   @Binding var isPresented: Bool
   @Binding var images: [UIImage]
+  @Binding var videoURLs: [URL]
 
   var filter: PHPickerFilter?
   var selectionLimit: Int
@@ -13,12 +14,14 @@ public struct PHPicker: UIViewControllerRepresentable {
     filter: PHPickerFilter? = nil,
     selectionLimit: Int = 0,
     isPresented: Binding<Bool>,
-    images: Binding<[UIImage]>
+    images: Binding<[UIImage]>,
+    videoURLs: Binding<[URL]>
   ) {
     self.filter = filter
     self.selectionLimit = selectionLimit
     self._isPresented = isPresented
     self._images = images
+    self._videoURLs = videoURLs
   }
 
   public func makeUIViewController(context: Context) -> PHPickerViewController {
@@ -51,12 +54,35 @@ public struct PHPicker: UIViewControllerRepresentable {
         for result in results {
           do {
             let image = try await loadImage(result: result)
+            let videoURL = try await loadVideo(result: result)
+
             parent.images.append(image)
+            parent.videoURLs.append(videoURL)
           } catch {
             print(error.localizedDescription)
           }
         }
         parent.isPresented = false
+      }
+    }
+
+    private func loadVideo(result: PHPickerResult) async throws -> URL {
+      try await withCheckedThrowingContinuation { continuation in
+        let provider = result.itemProvider
+
+        if provider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
+          provider.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { fileURL, error in
+            if let error {
+              continuation.resume(throwing: error)
+              return
+            }
+            guard let fileURL else {
+              continuation.resume(throwing: ImagePickerError.missingImage)
+              return
+            }
+            continuation.resume(returning: fileURL)
+          }
+        }
       }
     }
 
